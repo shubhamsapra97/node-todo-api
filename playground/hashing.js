@@ -1,5 +1,19 @@
 const {SHA256} = require('crypto-js');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+
+var pass = '123abc!';
+bcrypt.genSalt(10 , (err, salt)=>{
+  bcrypt.hash(pass,salt,(err,hash)=>{
+    console.log(hash);
+  });
+});
+
+var hashedResult = '$2a$10$0FysXDscfkoiY3lnZB0TLublgbB1hwE4tPACU6IlIAvHi2A/pk6Si';
+
+bcrypt.compare(pass,hashedResult,(err,res)=>{
+  console.log(res);
+});
 
 // jwt Method
 
