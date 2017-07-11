@@ -278,7 +278,7 @@ describe('POST /users/login' , ()=>{
       })
   });
 
-  it('should reject invalid login' , ()=>{
+  it('should reject invalid login' , (done)=>{
     request(app)
       .post('/users/login')
       .send({
@@ -295,7 +295,28 @@ describe('POST /users/login' , ()=>{
         }
 
         Users.findById(users[1]._id).then((user)=>{
-          expect(user.tokens[0]).toBe({});
+          expect(user.tokens.length).toBe(0);
+          done();
+        }).catch((err)=>done(err));
+      })
+  });
+
+});
+
+describe('DELETE /users/me/token' , ()=>{
+
+  it('should remove auth token on logout' , (done)=>{
+
+    request(app)
+      .delete('/users/me/token')
+      .set('x-auth',users[0].tokens[0].token)
+      .expect(200)
+      .end((err,res)=>{
+        if(err){
+          return done(err);
+        }
+        Users.findById(users[0]._id).then((user)=>{
+          expect(user.tokens.length).toBe(0);
           done();
         }).catch((err)=>done(err));
       })
